@@ -5,6 +5,9 @@ const { Client, GatewayIntentBits } = require('discord.js');
 // config.jsonからトークンを取得
 const { token } = require('./config.json');
 
+const { readyEvents } = require('./events/ready.js');
+const { interactionCreateEvents } = require('./events/interactionCreate.js');
+
 const client = new Client(
   { intents: [
       GatewayIntentBits.Guilds,
@@ -14,4 +17,6 @@ const client = new Client(
   }
 );
 
+readyEvents(client);
+interactionCreateEvents(client);
 client.login(token);

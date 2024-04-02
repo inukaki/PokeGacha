@@ -2,7 +2,7 @@ const { REST, Routes }  = require('discord.js')
 const fs = require('fs');
 const path = require('path');
 
-const { token, applicationId} = require('./config.json');
+const { token, applicationId, guildId} = require('./config.json');
 
 // commandsフォルダからコマンドを取得 .jsファイルのみを取得
 const commandFiles = fs.readdirSync(path.join(__dirname, 'commands')).filter(file => file.endsWith('.js'));
@@ -22,6 +22,7 @@ const rest = new REST({ version: '10' }).setToken(token);
         await rest.put(
             // コマンドを登録するAPIのエンドポイントを作成
             Routes.applicationCommands(applicationId), // グローバルコマンド
+            // Routes.applicationGuildCommands(applicationId, guildId), // ギルドコマンド
             // コマンドのリストをリクエストボディに設定
             { body: commands },
         );
