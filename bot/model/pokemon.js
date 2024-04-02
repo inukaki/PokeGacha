@@ -1,7 +1,7 @@
 module.exports = Pokemon;
 
-function Pokemon(name, type, id){
+function Pokemon(name, types, id){
     this.name = name;
-    this.type = type;
+    this.types = types;
     this.id = id;
 }

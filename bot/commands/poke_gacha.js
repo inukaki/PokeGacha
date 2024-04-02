@@ -8,24 +8,20 @@ module.exports = {
         .setName('poke_gacha')
         .setDescription('Get a random pokemon from the gacha'),
     async execute(interaction) {
-        console.log("poke_gacha command is executed");
+        // 1~151の乱数を生成
         const randomPokemonId = Math.floor(Math.random() * 151) + 1;
+
+        // ポケモンの情報を取得
         const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomPokemonId}`);
-        // const randomPokemon = response.data.results[Math.floor(Math.random() * response.data.results.length)];
-        
-        // console.log(response.data);
-        // console.log(response.data.name);
-        // console.log(response.data.types[0].type.name);
-        // console.log(response.data.id);
+
+        // ポケモンの情報をPokemonクラスに格納
         const randomPokemon = new Pokemon(
             response.data.name, 
-            response.data.types[0].type.name, 
+            response.data.types.map(type => type.type.name), 
             response.data.id);
-        // await interaction.reply(`You got a ${randomPokemon.name}!`);
 
-        console.log(`You got a ${randomPokemon.name}!`);
-        // console.log(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${randomPokemon.id}.png"`);
 
+        // ポケモンの情報を送信
         await interaction.reply({
             embeds: [{
                 color : 0x0099ff,
@@ -37,7 +33,7 @@ module.exports = {
                 fields: [
                     {
                         name: "Type",
-                        value: randomPokemon.type,
+                        value: randomPokemon.types.join(", "),
                         inline: true
                     }
                 ]
