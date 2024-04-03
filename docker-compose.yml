@@ -10,3 +10,29 @@ services:
     ports:
       - 3000:2222
     tty: true
+  
+  api:
+    build: ./api
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./api:/usr/src/api
+      - /usr/src/api/node_modules 
+    ports:
+      - 3001:2222
+    tty: true
+
+  db:
+    build: ./db
+    image: mysql:8.0
+    container_name: poke_db
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: poke_gacha
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - ./db:/usr/src/db
+    command: --default-authentication-plugin=mysql_native_password
