@@ -7,6 +7,7 @@ const { token } = require('./config.json');
 
 const { readyEvents } = require('./events/ready.js');
 const { interactionCreateEvents } = require('./events/interactionCreate.js');
+const { guildCreateEvents } = require('./events/guildCreate.js');
 
 const client = new Client(
   { intents: [
@@ -19,4 +20,5 @@ const client = new Client(
 
 readyEvents(client);
 interactionCreateEvents(client);
+guildCreateEvents(client);
 client.login(token);
