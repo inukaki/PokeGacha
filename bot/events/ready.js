@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const SerciveAccount = require('../ServiceAccountKey.json');
+const ServiceAccount = require('../ServiceAccountKey.json');
 
 module.exports = {
 
@@ -11,18 +11,9 @@ module.exports = {
 
             // Firebaseの初期化
             admin.initializeApp({
-                credential: admin.credential.cert(SerciveAccount)
+                credential: admin.credential.cert(ServiceAccount)
             });
-
-            const db = admin.firestore();
-            const docRef = db.collection('users').doc('alovelace');
-            (async () => {
-                await docRef.set({
-                    first: 'Ada',
-                    last: 'Lovelace',
-                    born: 1815
-                });
-            })();
+            
         });
     }
 }
