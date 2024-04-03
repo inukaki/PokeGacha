@@ -21,6 +21,7 @@ module.exports = {
         const doc = await docRef.get();
         let pokemons = doc.data().pokemons;
         let num_pokemons = doc.data().num_pokemons;
+        let num_register_pokemons = doc.data().num_register_pokemons;
 
         // ポケモンの情報を取得
         const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomPokemonId}`);
@@ -38,6 +39,7 @@ module.exports = {
         if (pokemons[randomPokemon.id].count == 0) {
             description += "[NEW] ";
             pokemons[randomPokemon.id].get_player = interaction.user.globalName;
+            num_register_pokemons++;
         }
         description += `No.${randomPokemon.id} ${randomPokemon.name}`;
 
@@ -48,7 +50,8 @@ module.exports = {
         (async () => {
             await docRef.set({
                 pokemons: pokemons,
-                num_pokemons: num_pokemons
+                num_pokemons: num_pokemons,
+                num_register_pokemons: num_register_pokemons
             });
         })();
 
@@ -72,6 +75,11 @@ module.exports = {
                         name: "捕まえた回数",
                         value: pokemons[randomPokemon.id].count,
                         inline: true
+                    },
+                    {
+                        name: "図鑑登録状況",
+                        value: `${num_register_pokemons}/151`,
+                        inline: false
                     }
                 ],
             }]
