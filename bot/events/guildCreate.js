@@ -11,7 +11,10 @@ module.exports = {
                 const docRef = db.collection('servers').doc(id);
                 const pokemons = [];
                 for (let i = 1; i <= 152; i++) {
-                    pokemons.push(false);
+                    pokemons.push({
+                        get_player:"",
+                        count : 0
+                    });
                 }
                 (async () => {
                     await docRef.set({

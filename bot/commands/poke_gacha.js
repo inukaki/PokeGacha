@@ -31,55 +31,51 @@ module.exports = {
             response.data.types.map(type => jpType[type.type.name]), 
             response.data.id);
 
+        // ポケモンの説明を作成
         let description = "";
-        
-        // ポケモンが未獲得の場合
-        if (pokemons[randomPokemon.id] == false) {
-            pokemons[randomPokemon.id] = true;
-            num_pokemons++;
-            description += "[NEW]\n";
-            (async () => {
-                await docRef.set({
-                    pokemons: pokemons,
-                    num_pokemons: 0
-                });
-            })();
+
+        // ポケモンが初ゲットだった場合
+        if (pokemons[randomPokemon.id].count == 0) {
+            description += "[NEW] ";
+            pokemons[randomPokemon.id].get_player = interaction.user.globalName;
         }
+        description += `No.${randomPokemon.id} ${randomPokemon.name}`;
 
-        description += `You got a ${randomPokemon.name}!`;
-
-
-
-        // ポケモンの情報を送信
-        await interaction.reply({
-            embeds: [{
-                color : 0x0099ff,
-                title : "Poke Gacha",
-                description : description,
-                image: {
-                    url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${randomPokemon.id}.png`
-                },
-                fields: [
-                    {
-                        name: "ID",
-                        value: randomPokemon.id,
-                        inline: true
-                    },
-                    {
-                        name: "Type",
-                        value: randomPokemon.types.join(", "),
-                        inline: true
-                    }
-                ]
-            }]
-        });
-        // 出たポケモンをデータベースに保存
-        pokemons[randomPokemon.id] = true;
+        
+        // ポケモンの獲得数を更新
+        num_pokemons++;
+        pokemons[randomPokemon.id].count++;
         (async () => {
             await docRef.set({
                 pokemons: pokemons,
                 num_pokemons: num_pokemons
             });
         })();
+
+
+        // ポケモンの情報を送信
+        await interaction.reply({
+            embeds: [{
+                color : 0x0099ff,
+                title : `${interaction.user.globalName}は${randomPokemon.name}を捕まえた！`,
+                description : description,
+                thumbnail: {
+                    url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${randomPokemon.id}.png`
+                },
+                fields: [
+                    {
+                        name: "タイプ",
+                        value: randomPokemon.types.join(", "),
+                        inline: true
+                    },
+                    {
+                        name: "捕まえた回数",
+                        value: pokemons[randomPokemon.id].count,
+                        inline: true
+                    }
+                ],
+            }]
+        });
+    
     },
 }
