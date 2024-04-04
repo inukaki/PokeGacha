@@ -9,16 +9,38 @@ const jpType = require('../jpType.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('poke_gacha')
-        .setDescription('Get a random pokemon from the gacha'),
+        .setDescription('ポケガチャを引きます'),
     async execute(interaction) {
-        // 1~151の乱数を生成
-        const randomPokemonId = Math.floor(Math.random() * 151) + 1;
-        
+
         const db = admin.firestore();
         const docRef = db.collection('servers').doc(interaction.guild.id);
+        const doc = await docRef.get();
+
+        // ユーザーの最後のガチャ日を取得
+        const users = doc.data().users;
+        const LastGachaDate = users[interaction.user.id];
+
+        // 現在の日時を取得
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if(LastGachaDate == today.getTime()){
+            await interaction.reply({
+                content: "本日はもうガチャを引いています",
+                ephemeral: true
+            });
+            return;
+        }
+        // ユーザーの最後のガチャ日を更新
+        users[interaction.user.id] = today.getTime();
+
+
+
+        
+        // 1~151の乱数を生成
+        const randomPokemonId = Math.floor(Math.random() * 151) + 1;
 
         // ポケモンの獲得状況を取得
-        const doc = await docRef.get();
         let pokemons = doc.data().pokemons;
         let num_pokemons = doc.data().num_pokemons;
         let num_register_pokemons = doc.data().num_register_pokemons;
@@ -51,7 +73,8 @@ module.exports = {
             await docRef.set({
                 pokemons: pokemons,
                 num_pokemons: num_pokemons,
-                num_register_pokemons: num_register_pokemons
+                num_register_pokemons: num_register_pokemons,
+                users: users
             });
         })();
 
@@ -84,6 +107,5 @@ module.exports = {
                 ],
             }]
         });
-    
     },
 }

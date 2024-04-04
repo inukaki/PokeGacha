@@ -20,7 +20,8 @@ module.exports = {
                     await docRef.set({
                         pokemons: pokemons,
                         num_pokemons: 0,
-                        num_register_pokemons: 0
+                        num_register_pokemons: 0,
+                        users: {}
                     });
                 })();
             }
