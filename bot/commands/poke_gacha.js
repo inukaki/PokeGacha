@@ -24,13 +24,13 @@ module.exports = {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // if(LastGachaDate == today.getTime()){
-        //     await interaction.reply({
-        //         content: "本日はもうガチャを引いています",
-        //         ephemeral: true
-        //     });
-        //     return;
-        // }
+        if(LastGachaDate == today.getTime()){
+            await interaction.reply({
+                content: "本日は既にガチャを引いています",
+                ephemeral: true
+            });
+            return;
+        }
         // ユーザーの最後のガチャ日を更新
         users[interaction.user.id] = today.getTime();
 
