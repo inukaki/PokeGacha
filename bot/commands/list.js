@@ -1,10 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
-const axios = require('axios');
 
-const Pokemon = require('../model/pokemon.js');
 const admin = require('firebase-admin');
-const jpName = require('../jpName.json');
-const jpType = require('../jpType.json');
 const Pokemons = require('../Pokemons.json')
 
 module.exports = {
