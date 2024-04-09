@@ -40,6 +40,11 @@ module.exports = {
             }
             response += line;
         }
+        if(response.length + 50 > 2000){
+            response += "```";
+            await interaction.channel.send(response);
+            response = "```diff\n";
+        }
         response += `総獲得ポケモン数 : ${num_pokemons}匹\n`;
         response += `登録ポケモン数　 : ${num_register_pokemons}/151匹`;
         response += "```";
