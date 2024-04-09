@@ -5,6 +5,7 @@ const Pokemon = require('../model/pokemon.js');
 const admin = require('firebase-admin');
 const jpName = require('../jpName.json');
 const jpType = require('../jpType.json');
+const Pokemons = require('../Pokemons.json')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -23,18 +24,19 @@ module.exports = {
         // レスポンスを作成
         let response = `## ${interaction.guild.name}のポケモン図鑑\n`;
         response += "```diff\n";
-        response += String("  No.    ポケモン名").padEnd(16, '　');
+        response += String("  レア No.   ポケモン名").padEnd(19, '　');
         response += String("獲得数").padEnd(4, '　');
         response += "初ゲットプレイヤー\n";
         for (let i = 1; i <= 151; i++) {
+            let rarity = `☆${Pokemons[i].rarity}`;
             let number =String(i).padStart(3, '0');
-            let name = String(jpName[i]).padEnd(6, '　');
+            let name = String(Pokemons[i].name).padEnd(6, '　');
             let count = String(pokemons[i].count).padStart(3, ' ');
             let player = String(pokemons[i].get_player).padEnd(10, '　');
             let line = "";
             if(pokemons[i].count == 0) line += "- "
             else line += "+ "; 
-            line += `No.${number} ${name} : ${count}匹    ${player}\n`;
+            line += `${rarity} No.${number} ${name} : ${count}匹    ${player}\n`;
             if(response.length + line.length + 3 > 2000){
                 response += "```";
                 await interaction.channel.send(response);
