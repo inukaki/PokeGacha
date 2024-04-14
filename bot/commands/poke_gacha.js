@@ -22,7 +22,8 @@ module.exports = {
 
         // 現在の日時を取得
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        // 日本時間AM5時に設定
+        today.setHours(-4, 0, 0, 0);
 
         if(LastGachaDate == today.getTime()){
             await interaction.reply({
