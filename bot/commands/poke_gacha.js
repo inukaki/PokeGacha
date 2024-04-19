@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const axios = require('axios');
+const moment = require('moment-timezone');
 
 const Pokemon = require('../model/pokemon.js');
 const admin = require('firebase-admin');
@@ -20,12 +21,19 @@ module.exports = {
         const users = doc.data().users;
         const LastGachaDate = users[interaction.user.id];
 
+        const fmt = 'YYYYMMDDHH';
         // 現在の日時を取得
-        const today = new Date();
+        const now = moment().tz('Asia/Tokyo');
+        const today = moment().tz('Asia/Tokyo');
         // 日本時間AM5時に設定
-        today.setHours(-4, 0, 0, 0);
+        today.set({hour: 5, minute: 0, second: 0, millisecond: 0});
 
-        if(LastGachaDate == today.getTime()){
+        // 5時より前の場合は前日として扱う
+        if(now < today){
+            today.subtract(1, 'days');
+        }
+
+        if(LastGachaDate == today.format(fmt)){
             await interaction.reply({
                 content: "本日は既にガチャを引いています",
                 ephemeral: true
@@ -33,7 +41,7 @@ module.exports = {
             return;
         }
         // ユーザーの最後のガチャ日を更新
-        users[interaction.user.id] = today.getTime();
+        users[interaction.user.id] = today.format(fmt);
 
 
         // ポケモンをガチャで取得
