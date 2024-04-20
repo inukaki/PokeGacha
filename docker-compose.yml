@@ -6,5 +6,5 @@ services:
       - ./bot:/usr/src/bot
       - /usr/src/bot/node_modules 
     ports:
-      - 3000:2222
+      - 4000:2222
     tty: true
