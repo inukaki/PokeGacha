@@ -19,7 +19,8 @@ module.exports = {
         
         // レスポンスを作成
         let response = `## ${interaction.guild.name}のポケモン図鑑\n`;
-        response += "```diff\n";
+        await interaction.reply(response);
+        response = "```diff\n";
         response += String("  レア No.   ポケモン名").padEnd(19, '　');
         response += String("獲得数").padEnd(4, '　');
         response += "初ゲットプレイヤー\n";
