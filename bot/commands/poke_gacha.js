@@ -88,12 +88,24 @@ module.exports = {
 
         // ポケモンの説明を作成
         let description = "";
+        let message = "";
 
         // ポケモンが初ゲットだった場合
         if (pokemons[randomPokemon.id].count == 0) {
             // description += "[NEW] ";
             pokemons[randomPokemon.id].get_player = interaction.user.globalName;
             num_register_pokemons++;
+            if(num_register_pokemons >= 151){
+                message = `
+🎉 おめでとうございます！ 🎉
+            
+このサーバーの皆さんの協力により、ついに全てのポケモン151種類を集めることができました！🌟
+
+ピカチュウからミュウまで、すべてのポケモンが掲載された図鑑が見事に完成し、努力が実を結びましたね！
+            
+🌟 皆さんの素晴らしい協力に感謝します！ 🌟 
+`;
+            }
         }
         //"☆"をレア度に応じて追加
         for (let i = 0; i < randomPokemon.rarity; i++) {
@@ -172,5 +184,13 @@ module.exports = {
                 ],
             }]
         });
+        if(num_register_pokemons == 151){
+            if(message != ""){
+                await interaction.followUp({
+                    content: message,
+                    ephemeral: false
+                });
+            }
+        }
     },
 }
