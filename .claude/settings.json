@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file=$(echo \"$CLAUDE_TOOL_OUTPUT\" | grep -o '\"file_path\":\"[^\"]*\"' | head -1 | cut -d'\"' -f4); if [ -n \"$file\" ] && echo \"$file\" | grep -q '\\.js$'; then cd /home/inuka/PokeGacha && node --check \"$file\" 2>&1 && echo \"syntax OK: $file\" || echo \"syntax ERROR: $file\"; fi"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Claude Code] 入力待ちです' >> /tmp/claude-notify.log"
+          }
+        ]
+      }
+    ]
+  }
+}
